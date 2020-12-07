@@ -1,0 +1,50 @@
+//out: ../css/snake.css, compress: true, sourceMap: true
+
+@snake: rgb(108, 142, 40);
+@dead: rgb(147, 102, 63);
+@fruit: rgb(157, 36, 36);
+@bg: #f1f1f1;
+
+*{
+  margin:0;
+  padding:0;
+}
+html{
+  font-family: sans-serif;
+}
+#score-wrapper{
+  width:100vw;
+  padding:1em;
+}
+
+#canvas-wrapper{
+  width:100vmin;
+  height:100vmin;
+  position: relative;
+  #canvas{
+    position: absolute;
+    top:1em;
+    right:1em;
+    bottom:1em;
+    left:1em;
+    background-color:@bg;
+    border:4px solid darken(@bg,20%);
+  }
+}
+
+.snake-segment, .fruit{
+  position: absolute;
+  width:1em;
+  height:1em;
+}
+.snake-segment{
+  background-color: lighten(@snake, 10%);
+  &.dead{ background-color: @dead; }
+  &.snake-head{
+    background-color: @snake;
+    &.dead{ background-color: lighten(@dead, 10%); }
+  }
+}
+.fruit{
+  background-color: @fruit;
+}
