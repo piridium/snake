@@ -12,15 +12,25 @@
 html{
   font-family: sans-serif;
 }
+#wrapper{
+  display: flex;
+  flex-wrap: wrap;
+}
 #score-wrapper{
-  width:100vw;
+  flex:1 1 auto;
   padding:1em;
+  @media screen and (orientation: landscape){ order:2; }
 }
 
 #canvas-wrapper{
-  width:100vmin;
-  height:100vmin;
+  flex:0 1 100vmin;
   position: relative;
+  width:100%;
+  &:after{
+    content:"";
+    display: block;
+    padding-bottom: 100%;
+  }
   #canvas{
     position: absolute;
     top:1em;
@@ -28,7 +38,6 @@ html{
     bottom:1em;
     left:1em;
     background-color:@bg;
-    border:4px solid darken(@bg,20%);
   }
 }
 
@@ -42,6 +51,7 @@ html{
   &.dead{ background-color: @dead; }
   &.snake-head{
     background-color: @snake;
+    z-index:1000;
     &.dead{ background-color: lighten(@dead, 10%); }
   }
 }

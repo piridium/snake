@@ -2,6 +2,8 @@ var canvas;
 var resolution = 32;
 var snake, fruit, dead;
 var direction = 'down';
+var speed = 16;
+var lock;
 
 $(document).ready(function(){
   canvas = $('#canvas');
@@ -10,36 +12,39 @@ $(document).ready(function(){
   console.log("canvas width : " + canvas.width() + " | canvas.height : " + canvas.height());
   
   (function loop() {
-    moveSnake(snake, direction, false);
-    placeFruit(snake);
-    drawSnake(snake);
+    moveSnake(false);
+    placeFruit();
+    draw();
     setScore();
-    if (!dead){ setTimeout(loop, 50);}
+    if (!dead){ setTimeout(loop, 1000/speed);}
   })();
 
 });
 
-document.onkeydown = function(e) {
+document.onkeydown = function(e) { // receive keyboard input
   if (dead){ return };
-  switch(e.which) {
+  if (!lock){
+    switch(e.which) {
       case 37: // left
-        direction = (direction != 'right') ? 'left' : 'right';
-        break;
+      direction = (direction != 'right') ? 'left' : 'right';
+      break;
       case 38: // up
-        direction = (direction != 'down') ? 'up' : 'down';
-        break;
+      direction = (direction != 'down') ? 'up' : 'down';
+      break;
       case 39: // right
-        direction = (direction != 'left') ? 'right' : 'left';
-        break;
+      direction = (direction != 'left') ? 'right' : 'left';
+      break;
       case 40: // down
-        direction = (direction != 'up') ? 'down' : 'up';
-        break;
+      direction = (direction != 'up') ? 'down' : 'up';
+      break;
       default: return;
+    }
+    lock = true;
   }
   e.preventDefault(); // prevent the default action (scroll / move caret)
 };
 
-function moveSnake(snake, direction, grow){
+function moveSnake(grow){
   // self-collision - detected one step too late, but thats 'völligegal'
   tail = [...snake];
   tail.shift();
@@ -54,7 +59,7 @@ function moveSnake(snake, direction, grow){
     fruit = [];
   }
   head = new position(snake[0]);
-  switch (direction){
+  switch (direction){ // grow snake at head
     case 'up':
       snake.unshift(head.up);
       break;
@@ -71,13 +76,14 @@ function moveSnake(snake, direction, grow){
       snake.unshift(head.stay);
   }
   if (!grow){
-    snake.pop();
+    snake.pop(); // delete tail
   } else {
-    grow = false;
+    grow = false; // reset grow
   }
 }
 
-function drawSnake(snake){
+function draw(){
+  // draw snake
   canvas.find('.snake-segment').remove();
   snake.forEach(function(pos,index){
     segment = new position(pos);
@@ -87,17 +93,20 @@ function drawSnake(snake){
     canvas.append('<div class="' + classes.join(' ') + '" style="' + segment.xPos + segment.yPos + segment.width + segment.height + '"></div>');
     // console.log('snake element '+index+' at pos '+pos+' drawn');
   });
+  // draw fruit
+  canvas.find('.fruit').remove();
+  segment = new position(fruit);
+  canvas.append('<div class="fruit" style="' + segment.xPos + segment.yPos + segment.width + segment.height + '"></div>');
+  // release lock
+  lock = false;
 }
 
-function placeFruit(snake){
+function placeFruit(){
   if (fruit.length === 0){
-    canvas.find('.fruit').remove();
     const allSites = Array.from({length: resolution*resolution}, (item, index) => index);
     let freeSites = allSites.filter(x => !snake.includes(x));
     // pick random
-    fruit = getRandomInt(0, freeSites.length);
-    segment = new position(fruit);
-    canvas.append('<div class="fruit" style="' + segment.xPos + segment.yPos + segment.width + segment.height + '"></div>');
+    fruit = freeSites[getRandomInt(0, freeSites.length)];
   }
 }
 
@@ -109,7 +118,7 @@ function getRandomInt(min, max) {
 
 function setScore(){
   var score = snake.length - 2;
-  $('#score').text('Score: ' + score + ' points');
+  $('#score').text('score ' + score + ' | size ' + resolution + 'x' + resolution + ' | speed ' + speed);
 }
 
 class position {
@@ -130,6 +139,7 @@ class position {
   }
   get right(){
     return ((this.i+1)%resolution != 0 ? this.i+1 : this.i+1-resolution);
+    // return ((this.i)+1 < resolution*resolution ? this.i+1 : 0);
   }
   get left(){
     return (this.i%resolution != 0 ? this.i-1 : this.i-1+resolution);
