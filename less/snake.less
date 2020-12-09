@@ -80,13 +80,20 @@ h1{
 }
 .snake-segment{
   background-color: lighten(@snake, 10%);
-  &.dead{ background-color: @dead; }
   &.snake-head{
     background-color: @snake;
     z-index:1000;
-    &.dead{ background-color: lighten(@dead, 10%); }
   }
+}
+#canvas.dead{
+  .snake-segment{ background-color: @dead; }
+  .snake-head{ background-color: lighten(@dead, 10%); }
 }
 .fruit{
   background-color: @fruit;
+}
+
+span[contenteditable], #go{
+  font-weight:500;
+  color:@snake;
 }
