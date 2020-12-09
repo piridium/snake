@@ -26,18 +26,22 @@ document.onkeydown = function(e) { // receive keyboard input
   if (!lock){
     switch(e.which) {
       case 37: // left
-      direction = (direction != 'right') ? 'left' : 'right';
-      break;
+        direction = (direction != 'right') ? 'left' : 'right';
+        break;
       case 38: // up
-      direction = (direction != 'down') ? 'up' : 'down';
-      break;
+        direction = (direction != 'down') ? 'up' : 'down';
+        break;
       case 39: // right
-      direction = (direction != 'left') ? 'right' : 'left';
-      break;
+        direction = (direction != 'left') ? 'right' : 'left';
+        break;
       case 40: // down
-      direction = (direction != 'up') ? 'down' : 'up';
-      break;
-      default: return;
+        direction = (direction != 'up') ? 'down' : 'up';
+        break;
+      case 32: // space
+        triggerPanic();
+        break; 
+      default:
+        return;
     }
     lock = true;
   }
@@ -118,7 +122,17 @@ function getRandomInt(min, max) {
 
 function setScore(){
   var score = snake.length - 2;
-  $('#score').text('score ' + score + ' | size ' + resolution + 'x' + resolution + ' | speed ' + speed);
+  stats = [];
+  stats.push('<div class="score">score '+score+'</div>');
+  stats.push('<div>speed '+speed+'</div>');
+  stats.push('<div>resolution '+resolution+'x'+resolution+'</div>');
+
+  // $('#score').text('score ' + score + ' | size ' + resolution + 'x' + resolution + ' | speed ' + speed);
+  $('#score').html(stats.join('<div class="divider">&nbsp;|&nbsp;</div>'));
+}
+
+function triggerPanic(){
+  window.location.href='https://en.wikipedia.org/wiki/Snake_(video_game_genre)';
 }
 
 class position {

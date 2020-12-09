@@ -5,21 +5,53 @@
 @fruit: rgb(157, 36, 36);
 @bg: #f1f1f1;
 
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;500&display=swap');
+
 *{
   margin:0;
   padding:0;
 }
 html{
-  font-family: sans-serif;
+  font-family: 'Roboto', sans-serif;
 }
+h1{
+  font-size: 4em;
+  margin: 0.25em 0;
+  font-weight:100;
+}
+
 #wrapper{
   display: flex;
   flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
 }
 #score-wrapper{
-  flex:1 1 auto;
-  padding:1em;
+  flex:0 1 auto;
   @media screen and (orientation: landscape){ order:2; }
+  padding:1em;
+  line-height:1.4em;
+  font-weight:300;
+  div#header div{
+    display: inline-block;
+    margin: 0 0.5rem 0.5rem 0;
+  }
+  div#score div{
+    display: inline-block;
+    &.score{ font-weight: 500;}
+  }
+  @media screen and (orientation: landscape){
+    div#header div{
+      display: block;
+    }
+    div#score div{
+      display: block;
+      &.divider{ display: none;}
+    }
+  }
+  #instructions{
+    font-size:0.8rem;
+  }
 }
 
 #canvas-wrapper{
